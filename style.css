@@ -63,7 +63,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   font-size: 2rem;           /* 32px */
   font-weight: bold;
   min-height: 80px;          /* 버튼 높이 */
-  width: 98vw;               /* 모바일에서 가로 꽉 채움 */
+  width: 80vw;               /* 모바일에서 가로 꽉 채움 */
   max-width: 480px;          /* 데스크탑 최대 폭 */
   margin: 0.5em auto;        /* 위아래 간격, 가운데 정렬 */
   padding: 16px 0;           /* 위아래 여백 */
@@ -153,7 +153,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
 }
 .chapter-list-scroll {
   width: 100%;
-  padding: 0 6px;
+  padding: 0 10px;
   overflow-y: auto;
   flex: 1 1 auto;
   display: flex;
