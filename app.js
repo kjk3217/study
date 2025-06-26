@@ -117,7 +117,20 @@ function renderQuizCard() {
       </div>
     </div>
   `;
+setTimeout(() => {
+    const contentDiv = document.getElementById('quiz-card-content');
+    if (contentDiv) {
+      contentDiv.classList.add('fade-in');
+      setTimeout(() => {
+        contentDiv.classList.remove('fade-in');
+      }, 400); // 0.4초(애니메이션 지속시간)
+    }
+  }, 20);
+  // ----------------------------
 
+  // (아래 버튼 클릭 이벤트 등은 그대로)
+  // ...
+}
   // 카드 클릭/스와이프/터치 차단 (스크롤만 허용)
   const card = document.querySelector('.quiz-card');
   if (card) {
