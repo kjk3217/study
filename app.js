@@ -5,22 +5,28 @@ let currentMode = 'question';  // 'question' | 'answer'
 let studyData = [];
 let buttonLocked = false;
 
-// 데이터 파일 파싱 함수
+// 문답 데이터 파일 파싱 함수 (버그 수정판)
 async function loadChapterQA(chapterNum) {
   const url = `data/chapter${chapterNum}.txt`;
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error('파일을 찾을 수 없습니다.');
     const text = await response.text();
-    // 2개 이상 줄바꿈(빈줄) 기준 문제 세트 분리
-    const itemBlocks = text.trim().split(/\n{2,}/);
-    // 각 문제 블록 파싱
+
+    // 문제+정답 블록 분리: 2개 이상 연속 줄바꿈(빈줄 포함)
+    const itemBlocks = text.trim().split(/\n\s*\n/);
+
+    // 각 문항에서 문제/정답 분리
     const qaList = itemBlocks.map(block => {
-      const lines = block.split(/\n/).map(line => line.trim()).filter(Boolean);
-      const q = lines[0].replace(/^\d+\.\s*/, '');
+      const lines = block.trim().split(/\n/).map(line => line.trim()).filter(Boolean);
+      // 첫 줄: 문제 (번호 제거)
+      const qMatch = lines[0].match(/^\d+\.\s*(.*)$/);
+      const q = qMatch ? qMatch[1] : lines[0];
+      // 둘째 줄 이후: ▶로 시작하는 정답만
       const a = lines.slice(1).filter(line => line.startsWith('▶')).map(line => line.replace(/^▶\s*/, ''));
       return { q, a };
     }).filter(qa => qa.q && qa.a.length > 0);
+
     return qaList;
   } catch (err) {
     alert(`[에러] 문제 파일을 불러올 수 없습니다:\n${url}`);
@@ -76,7 +82,7 @@ async function renderScreen(screen, chapter) {
   }
 }
 
-// 문제/정답 카드 렌더
+// 문제/정답 카드 렌더링
 function renderQuizCard() {
   const qa = studyData[currentSet];
   if (!qa) return;
@@ -112,7 +118,7 @@ function renderQuizCard() {
     </div>
   `;
 
-  // 카드 클릭/스와이프/터치 차단
+  // 카드 클릭/스와이프/터치 차단 (스크롤만 허용)
   const card = document.querySelector('.quiz-card');
   if (card) {
     card.addEventListener('touchstart', e => e.stopPropagation(), { passive: false });
@@ -122,7 +128,6 @@ function renderQuizCard() {
     card.addEventListener('mouseup', e => e.stopPropagation());
     card.addEventListener('click', e => e.stopPropagation());
     card.style.pointerEvents = "none";
-    // 내부 스크롤만 허용
     const contentDiv = card.querySelector('.quiz-card-content');
     if (contentDiv) contentDiv.style.pointerEvents = "auto";
   }
