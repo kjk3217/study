@@ -182,7 +182,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   justify-content: space-between;
   align-items: center;
   padding: 22px 26px 10px 26px;
-  font-size: 1.45rem;
+  font-size: 2rem;
   color: var(--main-dark);
   font-weight: 700;
   box-sizing: border-box;
@@ -267,9 +267,9 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   width: 32vw;
   max-width: 130px;
   min-width: 80px;
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: bold;
-  padding: 18px 0 14px 0;
+  padding: 10px 0 10px 0;
   border: none;
   border-radius: 12px;
   cursor: pointer;
