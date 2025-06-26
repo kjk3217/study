@@ -158,7 +158,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 /* ----------- 문제/정답 화면 ----------- */
