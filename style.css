@@ -62,7 +62,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   border-radius: 14px;
   font-size: 2rem;           /* 32px */
   font-weight: bold;
-  min-height: 60px;          /* 버튼 높이 */
+  min-height: 80px;          /* 버튼 높이 */
   width: 98vw;               /* 모바일에서 가로 꽉 채움 */
   max-width: 480px;          /* 데스크탑 최대 폭 */
   margin: 0.5em auto;        /* 위아래 간격, 가운데 정렬 */
