@@ -176,7 +176,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
 }
 .quiz-topbar {
   width: 100%;
-  background: #fff;
+  background: #fcf5dc;
   border-bottom: 2px solid var(--main-lightgray);
   display: flex;
   justify-content: space-between;
@@ -251,7 +251,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
 }
 .quiz-bottombar {
   width: 100%;
-  background: #fff;
+  background: #fcf5dc;
   border-top: 2px solid var(--main-lightgray);
   display: flex;
   justify-content: space-between;
