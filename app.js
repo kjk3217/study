@@ -89,10 +89,10 @@ function renderQuizCard() {
   let cardContent = '';
   let cardTitle = '';
   if (currentMode === 'question') {
-    cardTitle = '문제';
+    cardTitle = '[문제]';
     cardContent = `${currentSet + 1}. ${qa.q}`;
   } else {
-    cardTitle = '정답';
+    cardTitle = '✅정답';
     cardContent = qa.a.map(ans => `▶ ${ans}`).join('<br>');
   }
   document.getElementById('app').innerHTML = `
