@@ -46,7 +46,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
 
 .quiz-bottombar, .chapter-list-scroll, .main-screen { gap: 14px; }
 
-.quiz-btn, .chapter-btn, .main-start-btn {
+.quiz-btn, .main-start-btn {
   min-height: 48px;
   min-width: 80px;
   padding: 14px 0;
@@ -54,18 +54,26 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   font-weight: bold;
   letter-spacing: 1px;
 }
+
+/* ----------- 장 선택 버튼 (수정 반영) ----------- */
 .chapter-btn {
   background: var(--main-blue);
   color: #fff;
   border-radius: 14px;
-  font-size: 1em;
-  margin: 0.35em 0;
-  width: 100%;
+  font-size: 2rem;           /* 32px */
+  font-weight: bold;
+  min-height: 60px;          /* 버튼 높이 */
+  width: 98vw;               /* 모바일에서 가로 꽉 채움 */
+  max-width: 480px;          /* 데스크탑 최대 폭 */
+  margin: 0.5em auto;        /* 위아래 간격, 가운데 정렬 */
+  padding: 16px 0;           /* 위아래 여백 */
+  box-sizing: border-box;
+  transition: background 0.15s;
+  display: block;
 }
-.chapter-btn:active, .chapter-btn:hover { background: #343a40; }
-.quiz-btn-prev, .quiz-btn-next { background: var(--main-blue); color: #fff; }
-.quiz-btn-list { background: var(--main-yellow); color: var(--main-dark); }
-.quiz-btn-list:active, .quiz-btn-list:hover { background: #ffd740; }
+.chapter-btn:active, .chapter-btn:hover {
+  background: #343a40;
+}
 
 /* ----------- 메인 화면 ----------- */
 .main-screen {
@@ -130,7 +138,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   letter-spacing: 1px;
 }
 
-/* ----------- 장 선택 ----------- */
+/* ----------- 장 선택 화면 ----------- */
 .chapter-list-screen {
   min-height: 100vh;
   max-width: 480px;
@@ -145,7 +153,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
 }
 .chapter-list-scroll {
   width: 100%;
-  padding: 0 16px;
+  padding: 0 6px;
   overflow-y: auto;
   flex: 1 1 auto;
   display: flex;
@@ -279,7 +287,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   .main-logo { border-radius: 16px; }
   .main-start-btn { font-size: 1.2rem; padding: 15px 0; }
   .main-footer { font-size: 1rem; }
-  .chapter-btn { font-size: 1rem; }
+  .chapter-btn { font-size: 2rem; min-height: 48px; padding: 10px 0;}
   .quiz-card { width: 320px; height: 350px; min-width: 180px; min-height: 170px; border-radius: 16px; padding: 20px 12px 16px 12px;}
   .quiz-card-title, .quiz-card-content { font-size: 1.2rem; }
   .quiz-topbar, .quiz-bottombar { font-size: 1rem; padding: 10px 6px 8px 6px; }
@@ -292,7 +300,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
   .main-logo { border-radius: 12px; }
   .main-start-btn { font-size: 1rem; padding: 10px 0;}
   .main-footer { font-size: 0.9rem; }
-  .chapter-btn { font-size: 0.9rem; }
+  .chapter-btn { font-size: 1.8rem; min-height: 42px; padding: 8px 0;}
   .quiz-card { width: 280px; height: 320px; min-width: 120px; min-height: 110px; border-radius: 10px; padding: 10px 6px 10px 6px;}
   .quiz-card-title, .quiz-card-content { font-size: 0.95rem; }
   .quiz-topbar, .quiz-bottombar { font-size: 0.85rem; padding: 7px 3px 5px 3px; }
@@ -304,7 +312,7 @@ button:active, .btn:active, .quiz-btn:active { filter: brightness(0.95); }
     padding-left: 0;
     padding-right: 0;
   }
-  .chapter-list-scroll { padding: 0 6px; }
+  .chapter-list-scroll { padding: 0 2px; }
   .quiz-card { width: 95vw; max-width: 99vw; }
 }
 @media (min-width: 480px) {
