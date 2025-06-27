@@ -48,6 +48,10 @@ async function renderScreen(screen, chapter) {
         <div class="main-footer">성경 공부 앱 v1.0</div>
       </div>
     `;
+    // ★ 애니메이션 클래스 추가
+    setTimeout(() => {
+      document.querySelector('.main-screen').classList.add('screen-animate-in');
+    }, 0);
   } else if (screen === 'chapter') {
     let chapterBtns = '';
     for (let i = 1; i <= 22; i++) {
@@ -62,6 +66,10 @@ async function renderScreen(screen, chapter) {
         <div class="chapter-list-scroll">${chapterBtns}</div>
       </div>
     `;
+    // ★ 애니메이션 클래스 추가
+    setTimeout(() => {
+      document.querySelector('.chapter-list-screen').classList.add('screen-animate-in');
+    }, 0);
   } else if (screen === 'quiz') {
     currentChapter = chapter;
     currentSet = 0;
@@ -76,6 +84,9 @@ async function renderScreen(screen, chapter) {
           <button class="btn" onclick="renderScreen('chapter')">장 선택</button>
         </div>
       `;
+      setTimeout(() => {
+        document.querySelector('.screen').classList.add('screen-animate-in');
+      }, 0);
       return;
     }
     renderQuizCard();
@@ -89,7 +100,7 @@ function renderQuizCard() {
   let cardContent = '';
   let cardTitle = '';
   if (currentMode === 'question') {
-    cardTitle = '[ 문제 ]'; // 이모지+텍스트. 원하면 변경
+    cardTitle = '❓ 문제';
     cardContent = `${currentSet + 1}. ${qa.q}`;
   } else {
     cardTitle = '✅ 정답';
@@ -117,15 +128,19 @@ function renderQuizCard() {
       </div>
     </div>
   `;
+  // ★ 화면 슬라이드 인 애니메이션
+  setTimeout(() => {
+    document.querySelector('.quiz-wrap').classList.add('screen-animate-in');
+  }, 0);
 
-  // [1] 카드 텍스트 fade-in 애니메이션 적용
+  // [1] 카드 텍스트 fade-in 애니메이션 적용(기존)
   setTimeout(() => {
     const contentDiv = document.getElementById('quiz-card-content');
     if (contentDiv) {
       contentDiv.classList.add('fade-in');
       setTimeout(() => {
         contentDiv.classList.remove('fade-in');
-      }, 400); // 애니메이션 지속시간
+      }, 400);
     }
   }, 20);
 
