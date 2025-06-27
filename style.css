@@ -335,10 +335,18 @@ button:active,
 .quiz-card-content.fade-in {
   animation: fadeIn 0.4s cubic-bezier(.32,.92,.6,1.02);
 }
-/* 화면 전환 슬라이드 인 */
 /* ...기존 style.css 위쪽 생략... */
 
-/* 슬라이드 인(왼쪽으로) - 더 부드럽게 */
+/* 카드 fade-in (문제/정답 카드 전환) */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+.quiz-card-content.fade-in {
+  animation: fadeIn 0.4s cubic-bezier(.32,.92,.6,1.02);
+}
+
+/* 슬라이드 인(오른쪽→왼쪽, 화면 전환) */
 @keyframes slideLeftIn {
   from {
     opacity: 0;
