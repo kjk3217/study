@@ -5,10 +5,10 @@ let currentMode = 'question';  // 'question' | 'answer'
 let studyData = [];
 let buttonLocked = false;
 
-// 슬라이드 애니메이션 트리거 변수
+// 슬라이드 애니메이션 트리거
 let animateScreenIn = false;
 
-// 문답 데이터 파일 파싱 함수 (버그 수정판)
+// 문답 데이터 파일 파싱 함수
 async function loadChapterQA(chapterNum) {
   const url = `data/chapter${chapterNum}.txt`;
   try {
@@ -47,7 +47,7 @@ async function renderScreen(screen, chapter) {
         <div class="main-logo-box">
           <img src="images/main-logo.png" alt="앱 로고" class="main-logo"/>
         </div>
-        <button class="main-start-btn" onclick="renderScreen('chapter')">시작</button>
+        <button class="main-start-btn" id="main-start-btn">시작</button>
         <div class="main-footer">성경 공부 앱 v1.0</div>
       </div>
     `;
@@ -57,6 +57,11 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
+    // 메인에서 장 선택으로 이동: 슬라이드 인 적용!
+    document.getElementById('main-start-btn').onclick = () => {
+      animateScreenIn = true;
+      renderScreen('chapter');
+    };
   } else if (screen === 'chapter') {
     let chapterBtns = '';
     for (let i = 1; i <= 22; i++) {
@@ -77,6 +82,14 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
+    // 각 장 선택시: 슬라이드 인 효과 적용!
+    const btns = document.querySelectorAll('.chapter-btn');
+    btns.forEach((btn, idx) => {
+      btn.onclick = () => {
+        animateScreenIn = true;
+        renderScreen('quiz', idx + 1);
+      };
+    });
   } else if (screen === 'quiz') {
     currentChapter = chapter;
     currentSet = 0;
@@ -138,7 +151,6 @@ function renderQuizCard() {
       </div>
     </div>
   `;
-  // 화면 슬라이드 인: 오직 '목록' 버튼 클릭 후(animateScreenIn=true) 진입시에만
   if (animateScreenIn) {
     setTimeout(() => {
       document.querySelector('.quiz-wrap').classList.add('screen-animate-in');
@@ -183,10 +195,10 @@ function renderQuizCard() {
       currentSet = (currentSet - 1 + studyData.length) % studyData.length;
       currentMode = 'answer';
     }
-    renderQuizCard(); // ★슬라이드 애니메이션 X
+    renderQuizCard(); // 슬라이드 인 없이 카드만 전환
   };
   document.getElementById('btn-list').onclick = () => {
-    animateScreenIn = true;  // ★목록화면에만 슬라이드 적용
+    animateScreenIn = true;
     renderScreen('chapter');
   };
   document.getElementById('btn-next').onclick = () => {
@@ -199,7 +211,7 @@ function renderQuizCard() {
       currentMode = 'question';
       currentSet = (currentSet + 1) % studyData.length;
     }
-    renderQuizCard(); // ★슬라이드 애니메이션 X
+    renderQuizCard(); // 슬라이드 인 없이 카드만 전환
   };
 }
 
