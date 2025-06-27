@@ -1,8 +1,8 @@
 {
   "name": "요한 계시록 문답 공부",
   "short_name": "계시록공부",
-  "theme_color": "#312b24",
-  "background_color": "#312b24",
+  "theme_color": "#fcf5dc",
+  "background_color": "#fcf5dc",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": ".",
