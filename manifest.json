@@ -5,20 +5,11 @@
   "theme_color": "#fcf5dc",
   "background_color": "#fcf5dc",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait-primary",
   "start_url": "./",
   "scope": "./",
   "lang": "ko",
   "categories": ["education", "books", "reference"],
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "protocol_handlers": [],
-  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",
@@ -60,5 +51,10 @@
       "url": "./?settings=true",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "protocol_handlers": [],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
