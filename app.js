@@ -199,7 +199,6 @@ async function renderScreen(screen, chapter) {
       `;
     }
     app.innerHTML = `
-      <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
       <div class="chapter-list-screen">
         <div class="chapter-list-scroll">${chapterBtns}</div>
       </div>
@@ -210,11 +209,6 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
-    // 설정 버튼 이벤트
-    document.getElementById('settings-btn').addEventListener('click', () => {
-      animateScreenIn = true;
-      renderSettingsScreen();
-    });
   } else if (screen === 'quiz') {
     currentChapter = chapter;
     currentSet = 0;
@@ -222,7 +216,6 @@ async function renderScreen(screen, chapter) {
     studyData = await loadChapterQA(currentChapter);
     if (!studyData.length) {
       app.innerHTML = `
-        <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
         <div class="chapter-list-screen">
           <div style="text-align: center; padding: 40px; font-size: calc(1.2rem * var(--font-scale)); color: #e74c3c;">
             계시록 ${chapter}장 문제<br><br>
@@ -238,11 +231,6 @@ async function renderScreen(screen, chapter) {
         }, 0);
         animateScreenIn = false;
       }
-      // 설정 버튼 이벤트
-      document.getElementById('settings-btn').addEventListener('click', () => {
-        animateScreenIn = true;
-        renderSettingsScreen();
-      });
       return;
     }
     renderQuizCard();
@@ -283,7 +271,6 @@ function renderQuizCard() {
   }
   
   document.getElementById('app').innerHTML = `
-    <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
     <div class="quiz-wrap">
       <div class="quiz-topbar">
         <span class="quiz-chapter">계시록${currentChapter}장</span>
@@ -312,12 +299,6 @@ function renderQuizCard() {
     }, 0);
     animateScreenIn = false;
   }
-
-  // 설정 버튼 이벤트
-  document.getElementById('settings-btn').addEventListener('click', () => {
-    animateScreenIn = true;
-    renderSettingsScreen();
-  });
 
   // 카드 텍스트 fade-in 애니메이션(문제/정답 전환)
   setTimeout(() => {
