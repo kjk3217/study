@@ -162,7 +162,7 @@ async function renderScreen(screen, chapter) {
   
   if (screen === 'main') {
     app.innerHTML = `
-      <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
+      <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
       <div class="main-screen">
         <div class="main-header">요한계시록<br>문답 공부</div>
         <div class="main-logo-box">
@@ -178,6 +178,8 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
+    // 설정 버튼 이벤트
+    document.getElementById('settings-btn').onclick = openSettings;
     // 메인에서 장 선택으로 이동: 슬라이드 인 적용!
     document.getElementById('main-start-btn').onclick = () => {
       animateScreenIn = true;
@@ -193,7 +195,7 @@ async function renderScreen(screen, chapter) {
       `;
     }
     app.innerHTML = `
-      <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
+      <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
       <div class="chapter-list-screen">
         <div class="chapter-list-scroll">${chapterBtns}</div>
       </div>
@@ -204,6 +206,8 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
+    // 설정 버튼 이벤트
+    document.getElementById('settings-btn').onclick = openSettings;
   } else if (screen === 'quiz') {
     currentChapter = chapter;
     currentSet = 0;
@@ -211,7 +215,7 @@ async function renderScreen(screen, chapter) {
     studyData = await loadChapterQA(currentChapter);
     if (!studyData.length) {
       app.innerHTML = `
-        <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
+        <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
         <div class="chapter-list-screen">
           <div style="text-align: center; padding: 40px; font-size: calc(1.2rem * var(--font-scale)); color: #e74c3c;">
             계시록 ${chapter}장 문제<br><br>
@@ -227,6 +231,8 @@ async function renderScreen(screen, chapter) {
         }, 0);
         animateScreenIn = false;
       }
+      // 설정 버튼 이벤트
+      document.getElementById('settings-btn').onclick = openSettings;
       return;
     }
     renderQuizCard();
@@ -255,7 +261,7 @@ function renderQuizCard() {
   }
   
   document.getElementById('app').innerHTML = `
-    <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
+    <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
     <div class="quiz-wrap">
       <div class="quiz-topbar">
         <span class="quiz-chapter">계시록${currentChapter}장</span>
@@ -284,6 +290,9 @@ function renderQuizCard() {
     }, 0);
     animateScreenIn = false;
   }
+
+  // 설정 버튼 이벤트
+  document.getElementById('settings-btn').onclick = openSettings;
 
   // 카드 텍스트 fade-in 애니메이션(문제/정답 전환)
   setTimeout(() => {
@@ -349,6 +358,12 @@ window.renderSettingsScreen = () => {
   animateScreenIn = true;
   renderSettingsScreen();
 };
+
+// 설정 버튼 클릭 핸들러
+function openSettings() {
+  animateScreenIn = true;
+  renderSettingsScreen();
+}
 
 // 최초 진입
 window.onload = () => { 
