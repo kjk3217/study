@@ -2,8 +2,23 @@
   --main-blue: #312b24;
   --main-dark: #312b24;
   --main-yellow: #ffc107;
-  --main-lightgray: #fcf5dc;
+  --main-lightgray: #312b24;
   --main-gray: #312b24;
+  
+  /* 사용자 설정 가능한 CSS 변수들 */
+  --font-scale: 1;
+  --layout-scale: 1;
+  --button-scale: 1;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  height: 100%;
+  overflow: hidden; /* 스크롤 방지 */
 }
 
 body {
@@ -12,36 +27,72 @@ body {
   padding: 0;
   font-family: 'Nanum Gothic', 'Malgun Gothic', Arial, sans-serif;
   color: var(--main-dark);
-  font-size: 32px;
+  font-size: calc(16px * var(--font-scale));
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  height: 100vh;
+  overflow: hidden; /* 전체 스크롤 방지 */
+  position: fixed;
+  width: 100%;
+  touch-action: manipulation; /* 줌 방지 */
 }
 
 #app {
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 설정 버튼 */
+.settings-btn {
+  position: fixed;
+  top: calc(10px * var(--layout-scale));
+  right: calc(10px * var(--layout-scale));
+  background: var(--main-blue);
+  color: #fff;
+  border: none;
+  border-radius: calc(8px * var(--layout-scale));
+  width: calc(40px * var(--button-scale));
+  height: calc(40px * var(--button-scale));
+  font-size: calc(20px * var(--font-scale));
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.settings-btn:active {
+  background: #2c2419;
+  transform: scale(0.95);
 }
 
 /* 버튼 스타일 및 터치 최적화 */
 button, .btn, .quiz-btn {
-  font-size: 1em;
+  font-size: calc(1em * var(--font-scale));
   font-family: inherit;
   border: none;
   outline: none;
-  border-radius: 14px;
-  min-height: 48px;
+  border-radius: calc(14px * var(--layout-scale));
+  min-height: calc(48px * var(--button-scale));
   cursor: pointer;
   transition: background 0.15s;
-  box-sizing: border-box;
   user-select: none;
   -webkit-user-select: none;
-  margin: 0.4em 0;
+  margin: calc(0.4em * var(--layout-scale)) 0;
+  touch-action: manipulation;
 }
-button:focus, .btn:focus, .quiz-btn:focus { outline: 2px solid #495057; }
+
+button:focus, .btn:focus, .quiz-btn:focus { 
+  outline: 2px solid #495057; 
+}
+
 button:active,
 .btn:active,
 .quiz-btn:active,
@@ -53,136 +104,229 @@ button:active,
   transition: transform 0.08s, filter 0.08s;
 }
 
-.quiz-bottombar, .chapter-list-scroll, .main-screen { gap: 14px; }
+.quiz-bottombar, .chapter-list-scroll, .main-screen { 
+  gap: calc(14px * var(--layout-scale)); 
+}
 
 .quiz-btn, .main-start-btn {
-  min-height: 48px;
-  min-width: 80px;
-  padding: 14px 0;
-  font-size: 1em;
+  min-height: calc(48px * var(--button-scale));
+  min-width: calc(80px * var(--button-scale));
+  padding: calc(14px * var(--layout-scale)) 0;
+  font-size: calc(1em * var(--font-scale));
   font-weight: bold;
   letter-spacing: 1px;
 }
 
-/* ----------- 장 선택 버튼 (수정 반영) ----------- */
+/* ----------- 설정 화면 ----------- */
+.settings-screen {
+  height: 100vh;
+  width: 100vw;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fcf5dc;
+  padding: calc(20px * var(--layout-scale));
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+}
+
+.settings-header {
+  font-size: calc(1.8rem * var(--font-scale));
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: calc(30px * var(--layout-scale));
+  color: var(--main-dark);
+}
+
+.settings-item {
+  margin-bottom: calc(25px * var(--layout-scale));
+  padding: calc(15px * var(--layout-scale));
+  background: rgba(255,255,255,0.5);
+  border-radius: calc(12px * var(--layout-scale));
+}
+
+.settings-label {
+  font-size: calc(1.1rem * var(--font-scale));
+  font-weight: bold;
+  margin-bottom: calc(10px * var(--layout-scale));
+  display: block;
+}
+
+.settings-range {
+  width: 100%;
+  height: calc(8px * var(--layout-scale));
+  border-radius: calc(4px * var(--layout-scale));
+  background: #ddd;
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: calc(10px * var(--layout-scale));
+}
+
+.settings-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: calc(20px * var(--layout-scale));
+  height: calc(20px * var(--layout-scale));
+  border-radius: 50%;
+  background: var(--main-blue);
+  cursor: pointer;
+}
+
+.settings-value {
+  font-size: calc(1rem * var(--font-scale));
+  color: var(--main-gray);
+  text-align: center;
+  margin-bottom: calc(10px * var(--layout-scale));
+}
+
+.settings-buttons {
+  display: flex;
+  gap: calc(10px * var(--layout-scale));
+  margin-top: calc(20px * var(--layout-scale));
+}
+
+.settings-btn-item {
+  flex: 1;
+  background: var(--main-blue);
+  color: #fff;
+  border: none;
+  border-radius: calc(12px * var(--layout-scale));
+  padding: calc(12px * var(--layout-scale)) calc(20px * var(--layout-scale));
+  font-size: calc(1rem * var(--font-scale));
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.settings-btn-reset {
+  background: var(--main-yellow);
+  color: var(--main-dark);
+}
+
+/* ----------- 장 선택 버튼 ----------- */
 .chapter-btn {
   background: var(--main-blue);
   color: #fff;
-  border-radius: 14px;
-  font-size: 2rem;           /* 32px */
+  border-radius: calc(14px * var(--layout-scale));
+  font-size: calc(1.2rem * var(--font-scale));
   font-weight: bold;
-  min-height: 80px;          /* 버튼 높이 */
-  width: 80vw;               /* 모바일에서 가로 꽉 채움 */
-  max-width: 480px;          /* 데스크탑 최대 폭 */
-  margin: 0.5em auto;        /* 위아래 간격, 가운데 정렬 */
-  padding: 16px 0;           /* 위아래 여백 */
-  box-sizing: border-box;
-  transition: background 0.15s;
+  min-height: calc(60px * var(--button-scale));
+  width: calc(80vw * var(--layout-scale));
+  max-width: calc(400px * var(--layout-scale));
+  margin: calc(0.3em * var(--layout-scale)) auto;
+  padding: calc(12px * var(--layout-scale)) 0;
   display: block;
+  transition: background 0.15s;
 }
+
 .chapter-btn:active, .chapter-btn:hover {
-  background: #312b24;
+  background: #2c2419;
 }
 
 /* ----------- 메인 화면 ----------- */
 .main-screen {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   max-width: 480px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 44px 0 28px 0;
-  box-sizing: border-box;
-  height: 100dvh;
+  padding: calc(40px * var(--layout-scale)) calc(20px * var(--layout-scale));
+  overflow: hidden;
 }
+
 .main-header {
   color: var(--main-dark);
-  font-size: 3rem;
+  font-size: calc(2rem * var(--font-scale));
   font-weight: bold;
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin-top: calc(20px * var(--layout-scale));
+  margin-bottom: calc(10px * var(--layout-scale));
   line-height: 1.2;
   letter-spacing: -1px;
 }
+
 .main-logo-box {
-  width: 300px;
-  height: 300px;
+  width: calc(200px * var(--layout-scale));
+  height: calc(200px * var(--layout-scale));
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .main-logo {
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #fcf5dc;
-  border-radius: 24px;
+  border-radius: calc(24px * var(--layout-scale));
 }
+
 .main-start-btn {
-  font-size: 2.2rem;
+  font-size: calc(1.5rem * var(--font-scale));
   font-weight: bold;
   background: var(--main-blue);
   color: #fcf5dc;
   border: none;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 340px;
-  padding: 22px 0;
-  margin: 30px 0 10px 0;
+  border-radius: calc(20px * var(--layout-scale));
+  width: calc(90% * var(--layout-scale));
+  max-width: calc(300px * var(--layout-scale));
+  padding: calc(18px * var(--layout-scale)) 0;
+  margin: calc(20px * var(--layout-scale)) 0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: background 0.2s;
   letter-spacing: 2px;
   cursor: pointer;
 }
+
 .main-footer {
-  font-size: 1.25rem;
+  font-size: calc(1rem * var(--font-scale));
   color: var(--main-gray);
   text-align: center;
   margin-bottom: 0;
-  margin-top: 24px;
+  margin-top: calc(20px * var(--layout-scale));
   width: 100%;
   letter-spacing: 1px;
 }
 
 /* ----------- 장 선택 화면 ----------- */
 .chapter-list-screen {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   max-width: 480px;
   margin: 0 auto;
   background: #fcf5dc;
-  padding: 24px 0;
+  padding: calc(20px * var(--layout-scale)) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
-  height: 100dvh;
+  overflow: hidden;
 }
+
 .chapter-list-scroll {
   width: 100%;
-  padding: 0 10px;
+  padding: 0 calc(10px * var(--layout-scale));
   overflow-y: auto;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: calc(5px * var(--layout-scale));
 }
 
 /* ----------- 문제/정답 화면 ----------- */
 .quiz-wrap {
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   max-width: 480px;
   margin: 0 auto;
   background: #fcf5dc;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
-  padding: 0;
+  overflow: hidden;
 }
+
 .quiz-topbar {
   width: 100%;
   background: #fcf5dc;
@@ -190,74 +334,72 @@ button:active,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 22px 26px 10px 26px;
-  font-size: 2rem;
+  padding: calc(20px * var(--layout-scale)) calc(20px * var(--layout-scale)) calc(10px * var(--layout-scale));
+  font-size: calc(1.2rem * var(--font-scale));
   color: var(--main-dark);
   font-weight: 700;
-  box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  flex-shrink: 0;
 }
+
 .quiz-card-area {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1 1 auto;
-  min-height: 520px;
-  padding: 18px 0;
-  box-sizing: border-box;
+  padding: calc(15px * var(--layout-scale)) 0;
+  overflow: hidden;
 }
+
 .quiz-card {
   background: var(--main-blue);
   color: #fff;
-  border-radius: 20px;
-  width: 400px;
-  height: 600px;
-  max-width: 94vw;
-  max-height: 80vh;
+  border-radius: calc(20px * var(--layout-scale));
+  width: calc(90vw * var(--layout-scale));
+  height: calc(60vh * var(--layout-scale));
+  max-width: calc(400px * var(--layout-scale));
+  max-height: calc(500px * var(--layout-scale));
   display: flex;
   flex-direction: column;
   align-items: stretch;
   box-shadow: 0 4px 16px rgba(44,62,80,0.06);
-  padding: 36px 32px 24px 32px;
-  box-sizing: border-box;
+  padding: calc(30px * var(--layout-scale)) calc(25px * var(--layout-scale)) calc(20px * var(--layout-scale));
   overflow: hidden;
+  touch-action: none;
+  pointer-events: none;
+  user-select: none;
 }
+
 .quiz-card-title {
-  font-size: 2.3rem;
+  font-size: calc(1.4rem * var(--font-scale));
   font-weight: 700;
   text-align: center;
   letter-spacing: -1px;
-  margin-bottom: 6px;
+  margin-bottom: calc(6px * var(--layout-scale));
+  flex-shrink: 0;
 }
+
 .quiz-card-divider {
   border: none;
   border-top: 2px solid var(--main-lightgray);
-  margin: 0 0 14px 0;
+  margin: 0 0 calc(14px * var(--layout-scale)) 0;
+  flex-shrink: 0;
 }
+
 .quiz-card-content {
-  font-size: 2.3rem;
+  font-size: calc(1.2rem * var(--font-scale));
   font-weight: 500;
   text-align: left;
   line-height: 1.6;
   flex: 1 1 auto;
   overflow-y: auto;
-  padding-top: 16px;
+  padding-top: calc(10px * var(--layout-scale));
   word-break: keep-all;
-}
-/* 카드 클릭 차단 */
-.quiz-card, .quiz-card-area {
-  touch-action: none;
-  pointer-events: none;
-  user-select: none;
-}
-.quiz-card-content {
   pointer-events: auto !important;
   touch-action: auto !important;
   user-select: text;
 }
+
 .quiz-bottombar {
   width: 100%;
   background: #fcf5dc;
@@ -265,83 +407,44 @@ button:active,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  padding: 20px 20px 30px 20px;
-  box-sizing: border-box;
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
+  gap: calc(10px * var(--layout-scale));
+  padding: calc(15px * var(--layout-scale)) calc(15px * var(--layout-scale)) calc(25px * var(--layout-scale));
+  flex-shrink: 0;
 }
-.quiz-btn {
-  width: 32vw;
-  max-width: 130px;
-  min-width: 80px;
-  font-size: 2rem;
-  font-weight: bold;
-  padding: 10px 0 10px 0;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  margin: 0 2px;
-}
-.quiz-btn-prev, .quiz-btn-next { background: var(--main-blue); color: #fff; }
-.quiz-btn-list { background: var(--main-yellow); color: var(--main-dark); }
-.quiz-btn-list:hover, .quiz-btn-list:active { background: #ffd740; }
 
-/* ----------- 반응형 최적화 ----------- */
-@media (max-width: 400px) {
-  body { font-size: 28px; }
-  .main-header { font-size: 1.7rem; }
-  .main-logo-box { width: 100px; height: 100px; }
-  .main-logo { border-radius: 16px; }
-  .main-start-btn { font-size: 1.2rem; padding: 15px 0; }
-  .main-footer { font-size: 1rem; }
-  .chapter-btn { font-size: 2rem; min-height: 48px; padding: 10px 0;}
-  .quiz-card { width: 320px; height: 350px; min-width: 180px; min-height: 170px; border-radius: 16px; padding: 20px 12px 16px 12px;}
-  .quiz-card-title, .quiz-card-content { font-size: 1.2rem; }
-  .quiz-topbar, .quiz-bottombar { font-size: 1rem; padding: 10px 6px 8px 6px; }
-  .quiz-btn { font-size: 1rem; padding: 10px 0 8px 0; min-height: 48px; }
+.quiz-btn {
+  width: calc(30vw * var(--button-scale));
+  max-width: calc(120px * var(--button-scale));
+  min-width: calc(80px * var(--button-scale));
+  font-size: calc(1rem * var(--font-scale));
+  font-weight: bold;
+  padding: calc(12px * var(--layout-scale)) 0;
+  border: none;
+  border-radius: calc(12px * var(--layout-scale));
+  cursor: pointer;
+  margin: 0 calc(2px * var(--layout-scale));
 }
-@media (max-width: 350px) {
-  body { font-size: 24px; }
-  .main-header { font-size: 1.3rem; }
-  .main-logo-box { width: 80px; height: 80px; }
-  .main-logo { border-radius: 12px; }
-  .main-start-btn { font-size: 1rem; padding: 10px 0;}
-  .main-footer { font-size: 0.9rem; }
-  .chapter-btn { font-size: 1.8rem; min-height: 42px; padding: 8px 0;}
-  .quiz-card { width: 280px; height: 320px; min-width: 120px; min-height: 110px; border-radius: 10px; padding: 10px 6px 10px 6px;}
-  .quiz-card-title, .quiz-card-content { font-size: 0.95rem; }
-  .quiz-topbar, .quiz-bottombar { font-size: 0.85rem; padding: 7px 3px 5px 3px; }
-  .quiz-btn { font-size: 0.8rem; padding: 8px 0 7px 0; min-height: 48px;}
+
+.quiz-btn-prev, .quiz-btn-next { 
+  background: var(--main-blue); 
+  color: #fff; 
 }
-@media (max-width: 500px) {
-  .main-screen, .chapter-list-screen, .quiz-wrap {
-    max-width: 100vw;
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .chapter-list-scroll { padding: 0 2px; }
-  .quiz-card { width: 95vw; max-width: 99vw; }
+
+.quiz-btn-list { 
+  background: var(--main-yellow); 
+  color: var(--main-dark); 
 }
-@media (min-width: 480px) {
-  .main-screen, .chapter-list-screen, .quiz-wrap { max-width: 430px; }
+
+.quiz-btn-list:hover, .quiz-btn-list:active { 
+  background: #ffd740; 
 }
+
 /* 카드 텍스트 페이드 인 애니메이션 */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px);}
+  from { opacity: 0; transform: translateY(10px);}
   to { opacity: 1; transform: translateY(0);}
 }
-.quiz-card-content.fade-in {
-  animation: fadeIn 0.4s cubic-bezier(.32,.92,.6,1.02);
-}
-/* ...기존 style.css 위쪽 생략... */
 
-/* 카드 fade-in (문제/정답 카드 전환) */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px);}
-  to   { opacity: 1; transform: translateY(0);}
-}
 .quiz-card-content.fade-in {
   animation: fadeIn 0.4s cubic-bezier(.32,.92,.6,1.02);
 }
@@ -350,14 +453,55 @@ button:active,
 @keyframes slideLeftIn {
   from {
     opacity: 0;
-    transform: translateX(100px);
+    transform: translateX(50px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
+
 .screen-animate-in {
-  animation: slideLeftIn 0.6s cubic-bezier(.22, 1, .36, 1.08) both;
+  animation: slideLeftIn 0.5s cubic-bezier(.22, 1, .36, 1.08) both;
 }
 
+/* 초소형 디바이스 대응 */
+@media (max-height: 600px) {
+  .main-logo-box {
+    width: calc(120px * var(--layout-scale));
+    height: calc(120px * var(--layout-scale));
+  }
+  .quiz-card {
+    height: calc(50vh * var(--layout-scale));
+  }
+}
+
+@media (max-width: 350px) {
+  .quiz-card {
+    width: calc(95vw * var(--layout-scale));
+  }
+  .chapter-btn {
+    width: calc(95vw * var(--layout-scale));
+  }
+}
+
+/* 큰 화면에서 최대 크기 제한 */
+@media (min-width: 480px) {
+  .main-screen, .chapter-list-screen, .quiz-wrap, .settings-screen { 
+    max-width: 430px; 
+  }
+}
+
+/* 가로 모드 대응 */
+@media (orientation: landscape) and (max-height: 500px) {
+  .main-screen {
+    padding: calc(20px * var(--layout-scale)) calc(20px * var(--layout-scale));
+  }
+  .main-logo-box {
+    width: calc(100px * var(--layout-scale));
+    height: calc(100px * var(--layout-scale));
+  }
+  .quiz-card {
+    height: calc(70vh * var(--layout-scale));
+  }
+}
