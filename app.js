@@ -82,7 +82,7 @@ function renderSettingsScreen() {
       <div class="settings-item">
         <label class="settings-label">📝 글자 크기</label>
         <input type="range" class="settings-range" id="font-scale" 
-               min="0.7" max="1.5" step="0.1" value="${settings.fontScale}">
+               min="0.7" max="2.0" step="0.1" value="${settings.fontScale}">
         <div class="settings-value" id="font-value">${Math.round(settings.fontScale * 100)}%</div>
       </div>
 
