@@ -403,7 +403,60 @@ window.onload = () => {
   
   // 동적으로 네비게이션바 색상 설정
   setNavigationBarColor();
+  
+  // PWA 모드인지 확인하고 추가 설정
+  if (isPWAMode()) {
+    setupPWANavigation();
+  }
 };
+
+// PWA 모드 확인 함수
+function isPWAMode() {
+  return (window.matchMedia('(display-mode: standalone)').matches) ||
+         (window.navigator.standalone) ||
+         (document.referrer.includes('android-app://'));
+}
+
+// PWA 전용 네비게이션 설정
+function setupPWANavigation() {
+  // PWA 모드에서 추가 네비게이션바 색상 설정
+  setTimeout(() => {
+    // 강제로 배경색 재설정
+    document.body.style.setProperty('background-color', '#fcf5dc', 'important');
+    document.documentElement.style.setProperty('background-color', '#fcf5dc', 'important');
+    
+    // PWA용 메타 태그 추가/수정
+    updatePWAMetaTags();
+    
+    // 전체 화면 색상 강제 적용
+    const style = document.createElement('style');
+    style.textContent = `
+      * { background-color: #fcf5dc !important; }
+      html, body { background: #fcf5dc !important; }
+      #app { background: #fcf5dc !important; }
+    `;
+    document.head.appendChild(style);
+  }, 100);
+}
+
+// PWA 메타 태그 업데이트
+function updatePWAMetaTags() {
+  // 기존 theme-color 메타 태그 제거 후 새로 추가
+  const existingThemes = document.querySelectorAll('meta[name="theme-color"]');
+  existingThemes.forEach(meta => meta.remove());
+  
+  // 새로운 theme-color 메타 태그 추가
+  const themeMeta = document.createElement('meta');
+  themeMeta.name = 'theme-color';
+  themeMeta.content = '#fcf5dc';
+  document.head.appendChild(themeMeta);
+  
+  // Android navigation-bar-color 메타 태그 추가 (실험적)
+  const navMeta = document.createElement('meta');
+  navMeta.name = 'msapplication-navbutton-color';
+  navMeta.content = '#fcf5dc';
+  document.head.appendChild(navMeta);
+}
 
 // 네비게이션바 색상 설정 함수
 function setNavigationBarColor() {
