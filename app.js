@@ -399,8 +399,33 @@ window.goToMainScreen = goToMainScreen;
 // 최초 진입
 window.onload = () => { 
   loadSettings();
-  renderScreen('main'); 
+  renderScreen('main');
+  
+  // 동적으로 네비게이션바 색상 설정
+  setNavigationBarColor();
 };
+
+// 네비게이션바 색상 설정 함수
+function setNavigationBarColor() {
+  // Android Chrome의 네비게이션바 색상 동적 설정
+  const existingMeta = document.querySelector('meta[name="theme-color"]');
+  if (existingMeta) {
+    existingMeta.content = '#fcf5dc';
+  }
+  
+  // 추가 메타 태그 생성
+  const navMeta = document.createElement('meta');
+  navMeta.name = 'msapplication-navbutton-color';
+  navMeta.content = '#fcf5dc';
+  document.head.appendChild(navMeta);
+  
+  // CSS 변수로 시스템 색상 설정 시도
+  document.documentElement.style.setProperty('--system-nav-color', '#fcf5dc');
+  
+  // 전체 body 색상 강제 설정
+  document.body.style.backgroundColor = '#fcf5dc';
+  document.documentElement.style.backgroundColor = '#fcf5dc';
+}
 
 // PWA 서비스워커 등록
 if ('serviceWorker' in navigator) {
