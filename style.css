@@ -19,6 +19,8 @@
 html {
   height: 100%;
   overflow: hidden; /* 스크롤 방지 */
+  /* 상태바/네비게이션바 색상 추가 설정 */
+  background-color: #fcf5dc;
 }
 
 body {
@@ -36,6 +38,8 @@ body {
   position: fixed;
   width: 100%;
   touch-action: manipulation; /* 줌 방지 */
+  /* 추가: 전체 영역 배경색 설정 */
+  background-color: #fcf5dc;
 }
 
 #app {
