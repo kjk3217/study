@@ -9,9 +9,6 @@
   --font-scale: 1;
   --layout-scale: 1;
   --button-scale: 1;
-  
-  /* 시스템 색상 변수 */
-  --system-nav-color: #fcf5dc;
 }
 
 * {
@@ -23,13 +20,11 @@ html {
   height: 100%;
   overflow: hidden; /* 스크롤 방지 */
   /* 상태바/네비게이션바 색상 추가 설정 */
-  background-color: #fcf5dc !important;
-  /* Android 네비게이션바 색상 강제 설정 */
-  color-scheme: light;
+  background-color: #fcf5dc;
 }
 
 body {
-  background: #fcf5dc !important;
+  background: #fcf5dc;
   margin: 0;
   padding: 0;
   font-family: 'Nanum Gothic', 'Malgun Gothic', Arial, sans-serif;
@@ -44,27 +39,7 @@ body {
   width: 100%;
   touch-action: manipulation; /* 줌 방지 */
   /* 추가: 전체 영역 배경색 설정 */
-  background-color: #fcf5dc !important;
-}
-
-/* Android 네비게이션바 색상 강제 설정 */
-@supports (color-scheme: light) {
-  :root {
-    color-scheme: light;
-  }
-}
-
-/* 시스템 UI 색상 강제 설정 */
-html::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #fcf5dc;
-  z-index: -1000;
-  pointer-events: none;
+  background-color: #fcf5dc;
 }
 
 #app {
