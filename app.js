@@ -1,12 +1,47 @@
 // 전역 상태 변수
 let currentChapter = 1;
-let currentSet = 0;         // 0-based index
-let currentMode = 'question';  // 'question' | 'answer'
+let currentSet = 0;
+let currentMode = 'question';
 let studyData = [];
 let buttonLocked = false;
-
-// 슬라이드 애니메이션 트리거
 let animateScreenIn = false;
+
+// 설정값 기본값
+let settings = {
+  fontScale: 1,
+  layoutScale: 1,
+  buttonScale: 1
+};
+
+// 설정 로드
+function loadSettings() {
+  try {
+    const saved = localStorage.getItem('bible-app-settings');
+    if (saved) {
+      settings = { ...settings, ...JSON.parse(saved) };
+    }
+  } catch (e) {
+    console.log('설정 로드 실패:', e);
+  }
+  applySettings();
+}
+
+// 설정 저장
+function saveSettings() {
+  try {
+    localStorage.setItem('bible-app-settings', JSON.stringify(settings));
+  } catch (e) {
+    console.log('설정 저장 실패:', e);
+  }
+}
+
+// 설정 적용
+function applySettings() {
+  const root = document.documentElement;
+  root.style.setProperty('--font-scale', settings.fontScale);
+  root.style.setProperty('--layout-scale', settings.layoutScale);
+  root.style.setProperty('--button-scale', settings.buttonScale);
+}
 
 // 문답 데이터 파일 파싱 함수
 async function loadChapterQA(chapterNum) {
@@ -37,11 +72,97 @@ async function loadChapterQA(chapterNum) {
   }
 }
 
+// 설정 화면 렌더링
+function renderSettingsScreen() {
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="settings-screen">
+      <div class="settings-header">⚙️ 화면 설정</div>
+      
+      <div class="settings-item">
+        <label class="settings-label">📝 글자 크기</label>
+        <input type="range" class="settings-range" id="font-scale" 
+               min="0.7" max="1.5" step="0.1" value="${settings.fontScale}">
+        <div class="settings-value" id="font-value">${Math.round(settings.fontScale * 100)}%</div>
+      </div>
+
+      <div class="settings-item">
+        <label class="settings-label">📐 레이아웃 크기</label>
+        <input type="range" class="settings-range" id="layout-scale" 
+               min="0.7" max="1.3" step="0.1" value="${settings.layoutScale}">
+        <div class="settings-value" id="layout-value">${Math.round(settings.layoutScale * 100)}%</div>
+      </div>
+
+      <div class="settings-item">
+        <label class="settings-label">🔘 버튼 크기</label>
+        <input type="range" class="settings-range" id="button-scale" 
+               min="0.7" max="1.4" step="0.1" value="${settings.buttonScale}">
+        <div class="settings-value" id="button-value">${Math.round(settings.buttonScale * 100)}%</div>
+      </div>
+
+      <div class="settings-buttons">
+        <button class="settings-btn-item settings-btn-reset" id="reset-settings">초기화</button>
+        <button class="settings-btn-item" id="save-settings">저장</button>
+        <button class="settings-btn-item" id="close-settings">닫기</button>
+      </div>
+    </div>
+  `;
+
+  if (animateScreenIn) {
+    setTimeout(() => {
+      document.querySelector('.settings-screen').classList.add('screen-animate-in');
+    }, 0);
+    animateScreenIn = false;
+  }
+
+  // 슬라이더 이벤트
+  const fontSlider = document.getElementById('font-scale');
+  const layoutSlider = document.getElementById('layout-scale');
+  const buttonSlider = document.getElementById('button-scale');
+
+  fontSlider.oninput = () => {
+    settings.fontScale = parseFloat(fontSlider.value);
+    document.getElementById('font-value').textContent = Math.round(settings.fontScale * 100) + '%';
+    applySettings();
+  };
+
+  layoutSlider.oninput = () => {
+    settings.layoutScale = parseFloat(layoutSlider.value);
+    document.getElementById('layout-value').textContent = Math.round(settings.layoutScale * 100) + '%';
+    applySettings();
+  };
+
+  buttonSlider.oninput = () => {
+    settings.buttonScale = parseFloat(buttonSlider.value);
+    document.getElementById('button-value').textContent = Math.round(settings.buttonScale * 100) + '%';
+    applySettings();
+  };
+
+  // 버튼 이벤트
+  document.getElementById('reset-settings').onclick = () => {
+    settings = { fontScale: 1, layoutScale: 1, buttonScale: 1 };
+    applySettings();
+    renderSettingsScreen();
+  };
+
+  document.getElementById('save-settings').onclick = () => {
+    saveSettings();
+    alert('설정이 저장되었습니다!');
+  };
+
+  document.getElementById('close-settings').onclick = () => {
+    animateScreenIn = true;
+    renderScreen('main');
+  };
+}
+
 // 화면 전환
 async function renderScreen(screen, chapter) {
   const app = document.getElementById('app');
+  
   if (screen === 'main') {
     app.innerHTML = `
+      <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
       <div class="main-screen">
         <div class="main-header">요한계시록<br>문답 공부</div>
         <div class="main-logo-box">
@@ -66,12 +187,13 @@ async function renderScreen(screen, chapter) {
     let chapterBtns = '';
     for (let i = 1; i <= 22; i++) {
       chapterBtns += `
-        <button class="chapter-btn" onclick="renderScreen('quiz', ${i})" aria-label="계시록 ${i}장">
+        <button class="chapter-btn" onclick="selectChapter(${i})" aria-label="계시록 ${i}장">
           📖 계시록 ${i}장
         </button>
       `;
     }
     app.innerHTML = `
+      <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
       <div class="chapter-list-screen">
         <div class="chapter-list-scroll">${chapterBtns}</div>
       </div>
@@ -82,14 +204,6 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
-    // 각 장 선택시: 슬라이드 인 효과 적용!
-    const btns = document.querySelectorAll('.chapter-btn');
-    btns.forEach((btn, idx) => {
-      btn.onclick = () => {
-        animateScreenIn = true;
-        renderScreen('quiz', idx + 1);
-      };
-    });
   } else if (screen === 'quiz') {
     currentChapter = chapter;
     currentSet = 0;
@@ -97,16 +211,19 @@ async function renderScreen(screen, chapter) {
     studyData = await loadChapterQA(currentChapter);
     if (!studyData.length) {
       app.innerHTML = `
-        <div class="screen">
-          <div class="quiz-title">계시록 ${chapter}장 문제</div>
-          <p style="font-size:1.2rem; color:#e74c3c;">문제 데이터를 불러올 수 없습니다.<br>
-          파일명, 폴더, 인코딩(UTF-8)을 확인하세요.</p>
-          <button class="btn" onclick="renderScreen('chapter')">장 선택</button>
+        <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
+        <div class="chapter-list-screen">
+          <div style="text-align: center; padding: 40px; font-size: calc(1.2rem * var(--font-scale)); color: #e74c3c;">
+            계시록 ${chapter}장 문제<br><br>
+            문제 데이터를 불러올 수 없습니다.<br>
+            파일명, 폴더, 인코딩(UTF-8)을 확인하세요.
+          </div>
+          <button class="chapter-btn" onclick="renderScreen('chapter')" style="margin-top: 20px;">장 선택으로 돌아가기</button>
         </div>
       `;
       if (animateScreenIn) {
         setTimeout(() => {
-          document.querySelector('.screen').classList.add('screen-animate-in');
+          document.querySelector('.chapter-list-screen').classList.add('screen-animate-in');
         }, 0);
         animateScreenIn = false;
       }
@@ -116,10 +233,17 @@ async function renderScreen(screen, chapter) {
   }
 }
 
+// 장 선택 함수
+function selectChapter(chapterNum) {
+  animateScreenIn = true;
+  renderScreen('quiz', chapterNum);
+}
+
 // 문제/정답 카드 렌더링
 function renderQuizCard() {
   const qa = studyData[currentSet];
   if (!qa) return;
+  
   let cardContent = '';
   let cardTitle = '';
   if (currentMode === 'question') {
@@ -129,7 +253,9 @@ function renderQuizCard() {
     cardTitle = '✅ 정답';
     cardContent = qa.a.map(ans => `▶ ${ans}`).join('<br>');
   }
+  
   document.getElementById('app').innerHTML = `
+    <button class="settings-btn" onclick="renderSettingsScreen()" aria-label="설정">⚙️</button>
     <div class="quiz-wrap">
       <div class="quiz-topbar">
         <span class="quiz-chapter">계시록${currentChapter}장</span>
@@ -151,6 +277,7 @@ function renderQuizCard() {
       </div>
     </div>
   `;
+  
   if (animateScreenIn) {
     setTimeout(() => {
       document.querySelector('.quiz-wrap').classList.add('screen-animate-in');
@@ -178,13 +305,10 @@ function renderQuizCard() {
     card.addEventListener('mousedown', e => e.stopPropagation());
     card.addEventListener('mouseup', e => e.stopPropagation());
     card.addEventListener('click', e => e.stopPropagation());
-    card.style.pointerEvents = "none";
-    const contentDiv = card.querySelector('.quiz-card-content');
-    if (contentDiv) contentDiv.style.pointerEvents = "auto";
   }
 
   // 버튼 이벤트 (중복 클릭 방지)
-  const lockDelay = 200;
+  const lockDelay = 300;
   document.getElementById('btn-prev').onclick = () => {
     if (buttonLocked) return;
     buttonLocked = true;
@@ -195,12 +319,17 @@ function renderQuizCard() {
       currentSet = (currentSet - 1 + studyData.length) % studyData.length;
       currentMode = 'answer';
     }
-    renderQuizCard(); // 슬라이드 인 없이 카드만 전환
+    renderQuizCard();
   };
+  
   document.getElementById('btn-list').onclick = () => {
+    if (buttonLocked) return;
+    buttonLocked = true;
+    setTimeout(() => { buttonLocked = false; }, lockDelay);
     animateScreenIn = true;
     renderScreen('chapter');
   };
+  
   document.getElementById('btn-next').onclick = () => {
     if (buttonLocked) return;
     buttonLocked = true;
@@ -211,16 +340,43 @@ function renderQuizCard() {
       currentMode = 'question';
       currentSet = (currentSet + 1) % studyData.length;
     }
-    renderQuizCard(); // 슬라이드 인 없이 카드만 전환
+    renderQuizCard();
   };
 }
 
+// 전역 함수로 설정 화면 렌더링 함수 노출
+window.renderSettingsScreen = () => {
+  animateScreenIn = true;
+  renderSettingsScreen();
+};
+
 // 최초 진입
-window.onload = () => { renderScreen('main'); };
+window.onload = () => { 
+  loadSettings();
+  renderScreen('main'); 
+};
 
 // PWA 서비스워커 등록
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      console.log('Service Worker 등록 실패:', err);
+    });
   });
 }
+
+// 화면 회전 시 설정 재적용
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    applySettings();
+  }, 100);
+});
+
+// 뒤로가기 방지 (선택사항)
+window.addEventListener('beforeunload', (e) => {
+  // PWA에서 실수로 나가는 것을 방지
+  if (window.location.href.includes('standalone')) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
