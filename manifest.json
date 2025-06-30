@@ -2,7 +2,7 @@
   "name": "요한 계시록 문답 공부",
   "short_name": "계시록공부",
   "description": "요한 계시록 문답 PWA - 오프라인 성경 학습, 시니어 친화 앱",
-  "theme_color": "#312b24",
+  "theme_color": "#fcf5dc",
   "background_color": "#fcf5dc",
   "display": "standalone",
   "orientation": "portrait-primary",
