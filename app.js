@@ -120,40 +120,40 @@ function renderSettingsScreen() {
   const layoutSlider = document.getElementById('layout-scale');
   const buttonSlider = document.getElementById('button-scale');
 
-  fontSlider.oninput = () => {
+  fontSlider.addEventListener('input', () => {
     settings.fontScale = parseFloat(fontSlider.value);
     document.getElementById('font-value').textContent = Math.round(settings.fontScale * 100) + '%';
     applySettings();
-  };
+  });
 
-  layoutSlider.oninput = () => {
+  layoutSlider.addEventListener('input', () => {
     settings.layoutScale = parseFloat(layoutSlider.value);
     document.getElementById('layout-value').textContent = Math.round(settings.layoutScale * 100) + '%';
     applySettings();
-  };
+  });
 
-  buttonSlider.oninput = () => {
+  buttonSlider.addEventListener('input', () => {
     settings.buttonScale = parseFloat(buttonSlider.value);
     document.getElementById('button-value').textContent = Math.round(settings.buttonScale * 100) + '%';
     applySettings();
-  };
+  });
 
   // 버튼 이벤트
-  document.getElementById('reset-settings').onclick = () => {
+  document.getElementById('reset-settings').addEventListener('click', () => {
     settings = { fontScale: 1, layoutScale: 1, buttonScale: 1 };
     applySettings();
     renderSettingsScreen();
-  };
+  });
 
-  document.getElementById('save-settings').onclick = () => {
+  document.getElementById('save-settings').addEventListener('click', () => {
     saveSettings();
     alert('설정이 저장되었습니다!');
-  };
+  });
 
-  document.getElementById('close-settings').onclick = () => {
+  document.getElementById('close-settings').addEventListener('click', () => {
     animateScreenIn = true;
     renderScreen('main');
-  };
+  });
 }
 
 // 화면 전환
@@ -162,13 +162,13 @@ async function renderScreen(screen, chapter) {
   
   if (screen === 'main') {
     app.innerHTML = `
-      <button class="settings-btn" id="settings-btn" aria-label="설정">⚙️</button>
       <div class="main-screen">
         <div class="main-header">요한계시록<br>문답 공부</div>
         <div class="main-logo-box">
           <img src="images/main-logo.png" alt="앱 로고" class="main-logo"/>
         </div>
         <button class="main-start-btn" id="main-start-btn">시작</button>
+        <button class="main-start-btn" id="main-settings-btn">⚙️ 설정</button>
         <div class="main-footer">성경 공부 앱 v1.0</div>
       </div>
     `;
@@ -178,13 +178,17 @@ async function renderScreen(screen, chapter) {
       }, 0);
       animateScreenIn = false;
     }
-    // 설정 버튼 이벤트
-    document.getElementById('settings-btn').onclick = openSettings;
-    // 메인에서 장 선택으로 이동: 슬라이드 인 적용!
-    document.getElementById('main-start-btn').onclick = () => {
+    
+    // 버튼 이벤트 등록
+    document.getElementById('main-start-btn').addEventListener('click', () => {
       animateScreenIn = true;
       renderScreen('chapter');
-    };
+    });
+    
+    document.getElementById('main-settings-btn').addEventListener('click', () => {
+      animateScreenIn = true;
+      renderSettingsScreen();
+    });
   } else if (screen === 'chapter') {
     let chapterBtns = '';
     for (let i = 1; i <= 22; i++) {
@@ -207,7 +211,10 @@ async function renderScreen(screen, chapter) {
       animateScreenIn = false;
     }
     // 설정 버튼 이벤트
-    document.getElementById('settings-btn').onclick = openSettings;
+    document.getElementById('settings-btn').addEventListener('click', () => {
+      animateScreenIn = true;
+      renderSettingsScreen();
+    });
   } else if (screen === 'quiz') {
     currentChapter = chapter;
     currentSet = 0;
@@ -232,7 +239,10 @@ async function renderScreen(screen, chapter) {
         animateScreenIn = false;
       }
       // 설정 버튼 이벤트
-      document.getElementById('settings-btn').onclick = openSettings;
+      document.getElementById('settings-btn').addEventListener('click', () => {
+        animateScreenIn = true;
+        renderSettingsScreen();
+      });
       return;
     }
     renderQuizCard();
@@ -243,6 +253,18 @@ async function renderScreen(screen, chapter) {
 function selectChapter(chapterNum) {
   animateScreenIn = true;
   renderScreen('quiz', chapterNum);
+}
+
+// 메인화면에서 장 선택 화면으로 (수정된 부분)
+function goToChapterScreen() {
+  animateScreenIn = true;
+  renderScreen('chapter');
+}
+
+// 장 선택화면에서 메인으로 (수정된 부분)  
+function goToMainScreen() {
+  animateScreenIn = true;
+  renderScreen('main');
 }
 
 // 문제/정답 카드 렌더링
@@ -292,7 +314,10 @@ function renderQuizCard() {
   }
 
   // 설정 버튼 이벤트
-  document.getElementById('settings-btn').onclick = openSettings;
+  document.getElementById('settings-btn').addEventListener('click', () => {
+    animateScreenIn = true;
+    renderSettingsScreen();
+  });
 
   // 카드 텍스트 fade-in 애니메이션(문제/정답 전환)
   setTimeout(() => {
@@ -318,7 +343,7 @@ function renderQuizCard() {
 
   // 버튼 이벤트 (중복 클릭 방지)
   const lockDelay = 300;
-  document.getElementById('btn-prev').onclick = () => {
+  document.getElementById('btn-prev').addEventListener('click', () => {
     if (buttonLocked) return;
     buttonLocked = true;
     setTimeout(() => { buttonLocked = false; }, lockDelay);
@@ -329,17 +354,17 @@ function renderQuizCard() {
       currentMode = 'answer';
     }
     renderQuizCard();
-  };
+  });
   
-  document.getElementById('btn-list').onclick = () => {
+  document.getElementById('btn-list').addEventListener('click', () => {
     if (buttonLocked) return;
     buttonLocked = true;
     setTimeout(() => { buttonLocked = false; }, lockDelay);
     animateScreenIn = true;
     renderScreen('chapter');
-  };
+  });
   
-  document.getElementById('btn-next').onclick = () => {
+  document.getElementById('btn-next').addEventListener('click', () => {
     if (buttonLocked) return;
     buttonLocked = true;
     setTimeout(() => { buttonLocked = false; }, lockDelay);
@@ -350,20 +375,16 @@ function renderQuizCard() {
       currentSet = (currentSet + 1) % studyData.length;
     }
     renderQuizCard();
-  };
+  });
 }
 
 // 전역 함수로 설정 화면 렌더링 함수 노출
-window.renderSettingsScreen = () => {
-  animateScreenIn = true;
-  renderSettingsScreen();
-};
+window.renderSettingsScreen = renderSettingsScreen;
+window.selectChapter = selectChapter;
+window.goToChapterScreen = goToChapterScreen;
+window.goToMainScreen = goToMainScreen;
 
-// 설정 버튼 클릭 핸들러
-function openSettings() {
-  animateScreenIn = true;
-  renderSettingsScreen();
-}
+// 설정 버튼 클릭 핸들러 (삭제됨 - 더 이상 필요 없음)
 
 // 최초 진입
 window.onload = () => { 
