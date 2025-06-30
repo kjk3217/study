@@ -202,6 +202,62 @@ button:active,
   color: var(--main-dark);
 }
 
+/* ----------- 커스텀 팝업창 ----------- */
+.custom-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.custom-popup-content {
+  background: #fcf5dc;
+  border-radius: calc(20px * var(--layout-scale));
+  padding: calc(30px * var(--layout-scale));
+  width: calc(80vw * var(--layout-scale));
+  max-width: calc(350px * var(--layout-scale));
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--main-blue);
+}
+
+.custom-popup-icon {
+  font-size: calc(3rem * var(--font-scale));
+  margin-bottom: calc(15px * var(--layout-scale));
+}
+
+.custom-popup-title {
+  font-size: calc(1.5rem * var(--font-scale));
+  font-weight: bold;
+  color: var(--main-dark);
+  margin-bottom: calc(20px * var(--layout-scale));
+  line-height: 1.4;
+}
+
+.custom-popup-button {
+  background: var(--main-blue);
+  color: #fff;
+  border: none;
+  border-radius: calc(12px * var(--layout-scale));
+  padding: calc(15px * var(--layout-scale)) calc(30px * var(--layout-scale));
+  font-size: calc(1.2rem * var(--font-scale));
+  font-weight: bold;
+  cursor: pointer;
+  min-width: calc(100px * var(--button-scale));
+  transition: all 0.2s;
+}
+
+.custom-popup-button:active {
+  background: #2c2419;
+  transform: scale(0.95);
+}
+
 /* ----------- 장 선택 버튼 ----------- */
 .chapter-btn {
   background: var(--main-blue);
