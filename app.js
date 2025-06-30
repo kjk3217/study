@@ -13,6 +13,35 @@ let settings = {
   buttonScale: 1
 };
 
+// 커스텀 팝업창 표시 함수
+function showCustomPopup(icon, title, callback) {
+  const popup = document.createElement('div');
+  popup.className = 'custom-popup';
+  popup.innerHTML = `
+    <div class="custom-popup-content">
+      <div class="custom-popup-icon">${icon}</div>
+      <div class="custom-popup-title">${title}</div>
+      <button class="custom-popup-button" id="popup-ok-btn">확인</button>
+    </div>
+  `;
+  
+  document.body.appendChild(popup);
+  
+  // 확인 버튼 이벤트
+  document.getElementById('popup-ok-btn').addEventListener('click', () => {
+    document.body.removeChild(popup);
+    if (callback) callback();
+  });
+  
+  // 배경 클릭시 닫기
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      document.body.removeChild(popup);
+      if (callback) callback();
+    }
+  });
+}
+
 // 설정 로드
 function loadSettings() {
   try {
@@ -147,7 +176,7 @@ function renderSettingsScreen() {
 
   document.getElementById('save-settings').addEventListener('click', () => {
     saveSettings();
-    alert('설정이 저장되었습니다!');
+    showCustomPopup('✅', '설정이 저장되었습니다!');
   });
 
   document.getElementById('close-settings').addEventListener('click', () => {
